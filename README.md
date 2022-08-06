@@ -6,10 +6,24 @@ Similar Names is basically a package for names manipulation. That is, if you hav
 
 ## Instalation
 Similar Names can be installed directly through pip
-`pip install similarnames`
+```
+pip install load-bar
+```
 
 ## How to use?
-If you have a pandas dataframe with the names that you want to standardize, or look for close matches, simply execute the following command.
+If you have a pandas dataframe with the names that you want to standardize, or look for close matches, simply follow the steps described next. As for the "closeMatches" parameters, they are basically 6:
+```python
+closeMatches(obj, names, sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None)
+```
+- obj (dataframe): The pandas dataframe
+- names (str): The name of the pandas dataframe with the names that you want to analyze
+- sep (str or None): The separator to be used to split multiple names
+- connectors (str, list or None): Words to also be used as separators (e.g.: "and")
+- languages (str, list or None): Lanaguages for the default stopwords config (All stopwords are not considered names)
+- customWords (str, list or None): Additional words that should not be considered as names (e.g.: "jr")
+
+### 1st Scenario: 1 name per row
+In case your dataframe is already formatted with one name per row, simply execute the following command setting the "sep" parameter to "None". In case you are having some trouble with the results, you can set the "languages" and "customWords" parameters to include, or exclude, names from the analyses (by default, stopwords in english, portuguese and spanish are not considered names).
 
 ```python
 '''
@@ -24,7 +38,8 @@ Input (df): df and the name of the column with the names to check
 '''
 from similarnames import closeMatches
 
-df_standard = closeMatches(df, 'Names')
+# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None
+df_standard = closeMatches(df, 'Names', sep = None)
 
 '''
 Output (df_standard)
@@ -38,8 +53,8 @@ Output (df_standard)
 
 '''
 ```
-
-In case you have multiple names in a single row, the "explode" is automatically done for you. So, just provide the "sep" parameter to identify where we should use to split those names. Note: If you have an "and" (e.g.: Jon and Jane), it will be automatically replaced by the "sep" parameter before the split.
+### 2nd Scenario: Multiple names per row
+In case you have multiple names in a single row, the "explode" is automatically done for you. So, just provide the "sep" parameter to identify where we should use to split those names. By default, the connectors "and", "e" and "y" will also be considered as separators. Therefore, in case you are working in a different language, just set the "connectors" and "languagues" parameter as you wish.
 
 ```python
 '''
@@ -53,6 +68,7 @@ Input (df): df and the name of the column with the names to check
 '''
 from similarnames import closeMatches
 
+# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None
 df_standard = closeMatches(df, 'Names', sep = ',')
 
 '''

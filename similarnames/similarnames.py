@@ -1,4 +1,5 @@
 from unidecode import unidecode
+from nltk.corpus import stopwords
 
 class SimilarNames():
 
@@ -17,12 +18,21 @@ class SimilarNames():
             if elem not in self.uniqueList:
                 self.uniqueList.append(elem)
 
-    def closeMatches(self, obj, names, sep = ','):
+    def closeMatches(self, obj, names, sep, connectors, languages, customWords):
+        self.sep = sep
+        self.connectors = connectors
+
+        self.stopList = []
+        for l in languages:
+            self.stopList += stopwords.words(l)
+        self.stopList += customWords
+
         self.df = obj.copy()
         self.names = names
 
-        self.df[self.names] = [x.replace(' and ', ', ').replace(' e ', ', ').split(sep) for x in self.df[self.names]]
-        self.df = self.df.explode('Authors')
+        if self.sep != None:
+            self.df[self.names] = [self.nameSplit(x) for x in self.df[self.names]]
+            self.df = self.df.explode('Authors')
         self.df[self.names] = [x.strip() for x in self.df[self.names]]
         
         self.df['NormName'] = [self.normName(x) for x in self.df[self.names]]
@@ -39,9 +49,14 @@ class SimilarNames():
         
         return self.df
 
-    def maxList(name, uniqueList):
+    def nameSplit(self, name):
+        for c in self.connectors:
+            name = name.replace(f' {c} ', ', ')
+        return name.split(self.sep)
+
+    def maxList(self, name):
         maxList = name
-        for dup in uniqueList:
+        for dup in self.uniqueList:
             if len(set(name).intersection(dup)) >= 2 and len(dup) > len(name):
                 maxList = dup
         return maxList   
@@ -54,8 +69,8 @@ class SimilarNames():
         return minName
 
     def normName(self, name):
-        name = unidecode(name.title()).replace('-',' ').replace('.', '').split()
-        name = [x for x in name if x not in ['Das', 'Dos', 'Da', 'Do', 'De'] and len(x) > 1]
+        name = unidecode(name.lower()).replace('-',' ').replace('.', '').split()
+        name = [x for x in name if x not in self.stopList and len(x) > 1]
         return name
 
     def getSimilar(self, name):
@@ -81,6 +96,3 @@ class SimilarNames():
             if len(name) < len(minName):
                 minName = name
         return minName
-
-
-
