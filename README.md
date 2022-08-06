@@ -7,7 +7,7 @@ Similar Names is basically a package for names manipulation. That is, if you hav
 ## Instalation
 Similar Names can be installed directly through pip
 ```
-pip install load-bar
+pip install similarnames
 ```
 
 ## How to use?
