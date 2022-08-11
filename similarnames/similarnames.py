@@ -33,7 +33,6 @@ class SimilarNames():
         if self.sep != None:
             self.df[self.names] = [self.nameSplit(x) for x in self.df[self.names]]
             self.df = self.df.explode('Authors')
-        self.df[self.names] = [x.strip() for x in self.df[self.names]]
         
         self.df['NormName'] = [self.normName(x) for x in self.df[self.names]]
         self.allNames()
@@ -52,16 +51,9 @@ class SimilarNames():
     def nameSplit(self, name):
         for c in self.connectors:
             name = name.replace(f' {c} ', ', ')
-        return name.split(self.sep)
+        return [x.strip() for x in name.split(self.sep)]
 
-    def maxList(self, name):
-        maxList = name
-        for dup in self.uniqueList:
-            if len(set(name).intersection(dup)) >= 2 and len(dup) > len(name):
-                maxList = dup
-        return maxList   
-
-    def lowName(names):
+    def lowName(self, names):
         minName = names[0]
         for name in names:
             if len(name) < len(minName):
@@ -70,7 +62,7 @@ class SimilarNames():
 
     def normName(self, name):
         name = unidecode(name.lower()).replace('-',' ').replace('.', '').split()
-        name = [x for x in name if x not in self.stopList and len(x) > 1]
+        name = [x.strip() for x in name if x not in self.stopList and len(x) > 1]
         return name
 
     def getSimilar(self, name):
