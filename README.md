@@ -2,7 +2,7 @@
 Library for Standardizing names from a Pandas dataframe
 
 ## Description
-Similar Names is basically a package for names manipulation. That is, if you have a Pandas dataframe with multiple names written in different ways (e.g.: John Doe, John E. Doe and John Edson Doe), the "closeMatches" function will look for all similar names on that column and then add two columns: "Close Matches" (list of all close matches) and "StandardName" (shortest name of the list).
+Similar Names is basically a package for names manipulation. That is, if you have a Pandas dataframe with multiple names written in different ways (e.g.: John Doe, John E. Doe and John Edson Doe), the "close_matches" function will look for all similar names on that column and then add two columns: "Close Matches" (list of all close matches) and "standard_name" (shortest name of the list).
 
 ## Instalation
 Similar Names can be installed directly through pip
@@ -11,19 +11,19 @@ pip install similarnames
 ```
 
 ## How to use?
-If you have a pandas dataframe with the names that you want to standardize, or look for close matches, simply follow the steps described next. As for the "closeMatches" parameters, they are basically 6:
+If you have a pandas dataframe with the names that you want to standardize, or look for close matches, simply follow the steps described next. As for the "close_matches" parameters, they are basically 6:
 ```python
-closeMatches(obj, names, sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None)
+close_matches(obj, names, sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], custom_words = None)
 ```
 - obj (dataframe): The pandas dataframe
 - names (str): The name of the pandas dataframe with the names that you want to analyze
 - sep (str or None): The separator to be used to split multiple names
 - connectors (str, list or None): Words to also be used as separators (e.g.: "and")
 - languages (str, list or None): Lanaguages for the default stopwords config (All stopwords are not considered names)
-- customWords (str, list or None): Additional words that should not be considered as names (e.g.: "jr")
+- custom_words (str, list or None): Additional words that should not be considered as names (e.g.: "jr")
 
 ### 1st Scenario: 1 name per row
-In case your dataframe is already formatted with one name per row, simply execute the following command setting the "sep" parameter to "None". In case you are having some trouble with the results, you can set the "languages" and "customWords" parameters to include, or exclude, names from the analyses (by default, stopwords in english, portuguese and spanish are not considered names).
+In case your dataframe is already formatted with one name per row, simply execute the following command setting the "sep" parameter to "None". In case you are having some trouble with the results, you can set the "languages" and "custom_words" parameters to include, or exclude, names from the analyses (by default, stopwords in english, portuguese and spanish are not considered names).
 
 ```python
 '''
@@ -36,15 +36,15 @@ Input (df): df and the name of the column with the names to check
 | John E. Doe    |     |
 | John Edson D.  |     |
 '''
-from similarnames import closeMatches
+from similarnames import close_matches
 
-# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None
-df_standard = closeMatches(df, 'Names', sep = None)
+# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], custom_words = None
+df_standard = close_matches(df, 'Names', sep = None)
 
 '''
 Output (df_standard)
 
-| Names          | ... | CloseMatches                                                   | StandardName |
+| Names          | ... | close_matches                                                   | standard_name |
 |----------------|-----|----------------------------------------------------------------|--------------|
 | John Doe       |     | ['John Doe', 'John E. Doe', 'John Edson Doe', 'John Edson D.'] | John Doe     |
 | John Edson Doe |     | ['John Doe', 'John E. Doe', 'John Edson Doe', 'John Edson D.'] | John Doe     |
@@ -66,15 +66,15 @@ Input (df): df and the name of the column with the names to check
 | John E. Doe and Michael Johnson              | Two names (without sep) |     |
 | Jane A. Doe, Michael M. Johnson and John Doe | Three names (sep = ',') |     |
 '''
-from similarnames import closeMatches
+from similarnames import close_matches
 
-# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None
-df_standard = closeMatches(df, 'Names', sep = ',')
+# Default config: sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], custom_words = None
+df_standard = close_matches(df, 'Names', sep = ',')
 
 '''
 Output (df_standard)
 
-| Names              | Other columns           | ... | CloseMatches                              | StandardName    |
+| Names              | Other columns           | ... | close_matches                              | standard_name    |
 |--------------------|-------------------------|-----|-------------------------------------------|-----------------|
 | John Doe           | Two names (sep = ',')   |     | ['John Doe', 'John E. Doe']               | John Doe        |
 | Jane Doe           | Two names (sep = ',')   |     | ['Jane Doe', 'Jane A. Doe']               | Jane Doe        |

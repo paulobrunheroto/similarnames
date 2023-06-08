@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "similarnames"
-version = "0.1.6"
+version = "0.1.7"
 description = "Library for Standardizing names from a Pandas dataframe"
 authors = ["paulobrunheroto <paulobrunheroto@hotmail.com>"]
 

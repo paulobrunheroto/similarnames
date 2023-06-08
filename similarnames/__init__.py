@@ -1,8 +1,8 @@
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 from .similarnames import SimilarNames
 
-def closeMatches(obj, names, sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], customWords = None):
+def close_matches(obj, names, sep = ',', connectors = ['and','e','y'], languages = ['english', 'portuguese', 'spanish'], custom_words = None):
     if connectors == None:
         connectors = []
     else:
@@ -15,11 +15,11 @@ def closeMatches(obj, names, sep = ',', connectors = ['and','e','y'], languages 
         if not isinstance(languages, list):
             languages = [languages]
 
-    if customWords == None:
-        customWords = []
+    if custom_words == None:
+        custom_words = []
     else:
-        if not isinstance(customWords, list):
-            customWords = [customWords]
+        if not isinstance(custom_words, list):
+            custom_words = [custom_words]
 
     sn = SimilarNames()
-    return sn.closeMatches(obj, names, sep, connectors, languages, customWords)
+    return sn.close_matches(obj, names, sep, connectors, languages, custom_words)

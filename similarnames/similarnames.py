@@ -3,88 +3,88 @@ from nltk.corpus import stopwords
 
 class SimilarNames():
 
-    def allNames(self):
-        self.dictNames = {}
+    def all_names(self):
+        self.dict_names = {}
         for name in self.df[self.names].unique():
-            self.dictNames[name] = self.normName(name)
+            self.dict_names[name] = self.norm_name(name)
 
-    def uniqueNames(self):
-        self.similarList = []
-        for name in self.dictNames.keys():
-            self.similarList += [self.getSimilar(self.dictNames[name])]
+    def unique_names(self):
+        self.similar_list = []
+        for name in self.dict_names.keys():
+            self.similar_list += [self.get_similar(self.dict_names[name])]
         
-        self.uniqueList = []
-        for elem in self.similarList:
-            if elem not in self.uniqueList:
-                self.uniqueList.append(elem)
+        self.unique_list = []
+        for elem in self.similar_list:
+            if elem not in self.unique_list:
+                self.unique_list.append(elem)
 
-    def closeMatches(self, obj, names, sep, connectors, languages, customWords):
+    def close_matches(self, obj, names, sep, connectors, languages, custom_words):
         self.sep = sep
         self.connectors = connectors
 
-        self.stopList = []
+        self.stop_list = []
         for l in languages:
-            self.stopList += stopwords.words(l)
-        self.stopList += customWords
+            self.stop_list += stopwords.words(l)
+        self.stop_list += custom_words
 
         self.df = obj.copy()
         self.names = names
 
         if self.sep != None:
-            self.df[self.names] = [self.nameSplit(x) for x in self.df[self.names]]
+            self.df[self.names] = [self.name_split(x) for x in self.df[self.names]]
             self.df = self.df.explode('Authors')
         
-        self.df['NormName'] = [self.normName(x) for x in self.df[self.names]]
-        self.allNames()
-        self.uniqueNames()
+        self.df['norm_name'] = [self.norm_name(x) for x in self.df[self.names]]
+        self.all_names()
+        self.unique_names()
     
-        self.df['CloseMatches'] = [self.getSimilar(x) for x in self.df['NormName']]
+        self.df['close_matches'] = [self.get_similar(x) for x in self.df['norm_name']]
 
-        self.df['CloseMatches'] = [self.getMaxList(x) for x in self.df['CloseMatches']]
+        self.df['close_matches'] = [self.get_max_list(x) for x in self.df['close_matches']]
 
-        self.df['StandardName'] = [self.getMinName(x) for x in self.df['CloseMatches']]
+        self.df['StandardName'] = [self.get_min_name(x) for x in self.df['close_matches']]
         
-        self.df.drop(columns = 'NormName', inplace = True)
+        self.df.drop(columns = 'norm_name', inplace = True)
         
         return self.df
 
-    def nameSplit(self, name):
+    def name_split(self, name):
         for c in self.connectors:
             name = name.replace(f' {c} ', ', ')
         return [x.strip() for x in name.split(self.sep)]
 
-    def lowName(self, names):
-        minName = names[0]
+    def low_name(self, names):
+        min_name = names[0]
         for name in names:
-            if len(name) < len(minName):
-                minName = name
-        return minName
+            if len(name) < len(min_name):
+                min_name = name
+        return min_name
 
-    def normName(self, name):
+    def norm_name(self, name):
         name = unidecode(name.lower()).replace('-',' ').replace('.', '').split()
-        name = [x.strip() for x in name if x not in self.stopList and len(x) > 1]
+        name = [x.strip() for x in name if x not in self.stop_list and len(x) > 1]
         return name
 
-    def getSimilar(self, name):
-        similarList = []    
-        for n in self.dictNames.keys():
-            if name[0] == self.dictNames[n][0] and len(set(name).intersection(self.dictNames[n])) >= 2:
-                similarList += [n]
-        if len(similarList) < 1:
+    def get_similar(self, name):
+        similar_list = []    
+        for n in self.dict_names.keys():
+            if name[0] == self.dict_names[n][0] and len(set(name).intersection(self.dict_names[n])) >= 2:
+                similar_list += [n]
+        if len(similar_list) < 1:
             return [f'Not found: {name}']
         else:
-            return similarList
+            return similar_list
 
-    def getMaxList(self, names):
-        maxList = names
-        for dup in self.uniqueList:
+    def get_max_list(self, names):
+        max_list = names
+        for dup in self.unique_list:
             if len(set(names).intersection(dup)) >= 2 and len(dup) > len(names):
-                maxList = dup
-        return maxList
+                max_list = dup
+        return max_list
 
-    def getMinName(self, names):
-        minName = names[0]
+    def get_min_name(self, names):
+        min_name = names[0]
         for name in names:
-            if len(name) < len(minName):
-                minName = name
-        return minName
+            if len(name) < len(min_name):
+                min_name = name
+        return min_name

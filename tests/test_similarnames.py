@@ -3,56 +3,56 @@ from similarnames import SimilarNames
 
 
 def test_version():
-    assert __version__ == '0.1.6'
+    assert __version__ == '0.1.7'
 
-def test_nameSplit():
-    similarNames = SimilarNames()
-    similarNames.connectors = ['and']
-    similarNames.sep = ','
-    nameList = ['John and Jane', 'John, Michael','Maria José and João Silva']
+def test_name_split():
+    similar_names = SimilarNames()
+    similar_names.connectors = ['and']
+    similar_names.sep = ','
+    name_list = ['John and Jane', 'John, Michael','Maria José and João Silva']
 
-    nameResult = []
-    for name in nameList:
-        nameResult += [similarNames.nameSplit(name)]
+    name_result = []
+    for name in name_list:
+        name_result += [similar_names.name_split(name)]
     
-    expectedResult = [['John','Jane'], ['John', 'Michael'],['Maria José', 'João Silva']]
-    assert nameResult == expectedResult
+    expected_result = [['John','Jane'], ['John', 'Michael'],['Maria José', 'João Silva']]
+    assert name_result == expected_result
 
-def test_getMaxList():
-    similarNames = SimilarNames()
-    similarNames.uniqueList = [
+def test_get_max_list():
+    similar_names = SimilarNames()
+    similar_names.unique_list = [
         ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues'],
         ['Joao Siva Rodrigues', 'Joao S. Rodrigues'],
         ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues', 'Joao Silva R.'],
         ['Max Silva','Max Joao', 'Max Silva Rodrigues','Max S. Rodrigues', 'Joao Max Ribeiro']]
 
-    nameResult = similarNames.getMaxList(['Joao Silva', 'Joao S. Rodrigues'])
-    expectedResult = ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues', 'Joao Silva R.']
+    name_result = similar_names.get_max_list(['Joao Silva', 'Joao S. Rodrigues'])
+    expected_result = ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues', 'Joao Silva R.']
 
-    assert nameResult == expectedResult
+    assert name_result == expected_result
 
-def test_lowName():
-    similarNames = SimilarNames()
+def test_low_name():
+    similar_names = SimilarNames()
     names = ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues', 'Joao Silva R.']
-    nameResult = similarNames.lowName(names)
-    expectedResult = 'Joao Silva'
+    name_result = similar_names.low_name(names)
+    expected_result = 'Joao Silva'
 
-    assert nameResult == expectedResult
+    assert name_result == expected_result
 
-def test_normName():
-    similarNames = SimilarNames()
-    similarNames.stopList = ['jr']
+def test_norm_name():
+    similar_names = SimilarNames()
+    similar_names.stop_list = ['jr']
     name = 'João S. Caçá-lôe Jr.'
-    nameResult = similarNames.normName(name)
-    expectedResult = ['joao', 'caca', 'loe']
+    name_result = similar_names.norm_name(name)
+    expected_result = ['joao', 'caca', 'loe']
 
-    assert nameResult == expectedResult
+    assert name_result == expected_result
 
-def test_getMinName():
-    similarNames = SimilarNames()
+def test_get_min_name():
+    similar_names = SimilarNames()
     names = ['Joao Silva', 'Joao Siva Rodrigues', 'Joao S. Rodrigues', 'Joao Silva R.']
 
-    nameResult = similarNames.getMinName(names)
-    expectedResult = 'Joao Silva'
+    name_result = similar_names.get_min_name(names)
+    expected_result = 'Joao Silva'
 
-    assert nameResult == expectedResult   
+    assert name_result == expected_result   
